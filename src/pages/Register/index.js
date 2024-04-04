@@ -11,8 +11,9 @@ import api from '../../services/api'
 import {
   IconLoading,
   Container,
-  Logo,
   ContainerItens,
+  Logo,
+  ContainerForm,
   Label,
   Input,
   SignInlink
@@ -72,48 +73,50 @@ export function Register() {
 
   return (
     <Container>
-      <Logo src={RegisterImg} alt="register-image" />
       <ContainerItens>
-        <h1>Cadastra-se</h1>
+        <Logo src={RegisterImg} alt="register-image" />
+        <ContainerForm>
+          <h1>Cadastra-se</h1>
 
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>Name</Label>
-          <Input
-            type="text"
-            {...register('name')}
-            error={errors.name?.message}
-          />
-          <ErrorMessage>{errors.name?.message}</ErrorMessage>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Label>Name</Label>
+            <Input
+              type="text"
+              {...register('name')}
+              error={errors.name?.message}
+            />
+            <ErrorMessage>{errors.name?.message}</ErrorMessage>
 
-          <Label>Email</Label>
-          <Input
-            type="email"
-            {...register('email')}
-            error={errors.email?.message}
-          />
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              {...register('email')}
+              error={errors.email?.message}
+            />
+            <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
-          <Label>Senha</Label>
-          <Input
-            type="password"
-            {...register('password')}
-            error={errors.password?.message}
-          />
-          <ErrorMessage>{errors.password?.message}</ErrorMessage>
+            <Label>Senha</Label>
+            <Input
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+            />
+            <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
-          <Label>Confirmar Senha</Label>
-          <Input
-            type="password"
-            {...register('confirmPassword')}
-            error={errors.confirmPassword?.message}
-          />
-          <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+            <Label>Confirmar Senha</Label>
+            <Input
+              type="password"
+              {...register('confirmPassword')}
+              error={errors.confirmPassword?.message}
+            />
+            <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
 
-          <Button type="submit">Cadastrar</Button>
-          <SignInlink>
-            Já possui conta ? <Link to="/login">Entrar</Link>
-          </SignInlink>
-        </form>
+            <Button type="submit">Cadastrar</Button>
+            <SignInlink>
+              Já possui conta ? <Link to="/login">Entrar</Link>
+            </SignInlink>
+          </form>
+        </ContainerForm>
       </ContainerItens>
     </Container>
   )

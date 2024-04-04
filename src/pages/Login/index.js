@@ -13,8 +13,9 @@ import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import {
   Container,
-  Logo,
   ContainerItens,
+  Logo,
+  ContainerForm,
   Label,
   Input,
   SignInlink,
@@ -78,34 +79,36 @@ export function Login() {
   }
   return (
     <Container>
-      <Logo src={LoginImg} alt="login-image" />
       <ContainerItens>
-        <img src={LogoImg} alt="login-image" />
-        <h1>Login</h1>
+        <Logo src={LoginImg} alt="login-image" />
+        <ContainerForm>
+          <img src={LogoImg} alt="login-image" />
+          <h1>Login</h1>
 
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>Email</Label>
-          <Input
-            type="email"
-            {...register('email')}
-            error={errors.email?.message}
-          />
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              {...register('email')}
+              error={errors.email?.message}
+            />
+            <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
-          <Label>Senha</Label>
-          <Input
-            type="password"
-            autoComplete="false"
-            {...register('password')}
-            error={errors.password?.message}
-          />
-          <ErrorMessage>{errors.password?.message}</ErrorMessage>
+            <Label>Senha</Label>
+            <Input
+              type="password"
+              autoComplete="false"
+              {...register('password')}
+              error={errors.password?.message}
+            />
+            <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
-          <Button type="submit">Sign In</Button>
-        </form>
-        <SignInlink>
-          Não possui conta ? <Link to="/cadastro">Sign Up</Link>
-        </SignInlink>
+            <Button type="submit">Entrar</Button>
+          </form>
+          <SignInlink>
+            Não possui conta ? <Link to="/cadastro">Cadastre-se</Link>
+          </SignInlink>
+        </ContainerForm>
       </ContainerItens>
     </Container>
   )
