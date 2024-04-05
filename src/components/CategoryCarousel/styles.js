@@ -14,11 +14,7 @@ export const Container = styled.div`
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     border: none;
   }
-  .rec.rec-arrow:hover {
-    border: 2px solid #d92419;
-    background-color: #efefef;
-    color: #efefef;
-  }
+
   .rec.rec-arrow:disabled {
     border: none;
     background-color: #bebebf;
@@ -31,7 +27,14 @@ export const Container = styled.div`
     height: 12px;
   }
 `
-export const CategoryImg = styled.img``
+export const CategoryImg = styled.img`
+  @media screen and (max-width: 970px) {
+    width: 240px;
+  }
+  @media screen and (max-width: 768px) {
+    width: 200px;
+  }
+`
 export const ContainerItems = styled.div`
   display: flex;
   flex-direction: column;
