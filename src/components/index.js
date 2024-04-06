@@ -1,4 +1,5 @@
 export * from './Button'
+export * from './Banner'
 export * from './CardProduct'
 export * from './CategoryCarousel'
 export * from './OffersCarousel'
