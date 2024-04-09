@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
-import ProductsLogo from '../../assets/products-logo.svg'
-import { CardProduct } from '../../components'
+import BannerImg from '../../assets/banner.jpg'
+import { Banner, CardProduct } from '../../components'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import {
   Container,
-  ProductImg,
   CategoryMenu,
   CategoryButton,
   ProductsContainer
@@ -59,7 +58,7 @@ export function Products({ location: { state } }) {
 
   return (
     <Container>
-      <ProductImg src={ProductsLogo} alt="logo da home" />
+      <Banner src={BannerImg} alt="Imagem banner" isProduct />
       <CategoryMenu>
         {categories &&
           categories.map(category => (
