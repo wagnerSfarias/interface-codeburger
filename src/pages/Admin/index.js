@@ -14,8 +14,8 @@ export function Admin({ match: { path } }) {
     <Container>
       <SideMenuAdmin path={path} />
       <ContainerItems>
-        {path === paths.Order && <Orders />}
-        {path === paths.Products && <ListProducts />}
+        {path === paths.Orders && <Orders />}
+        {path === paths.ListProducts && <ListProducts />}
         {path === paths.NewProduct && <NewProducts />}
         {path === paths.EditProduct && <EditProduct />}
       </ContainerItems>
