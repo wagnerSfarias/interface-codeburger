@@ -1,3 +1,5 @@
+import { FaUserCog } from 'react-icons/fa'
+import { FiMenu } from 'react-icons/fi'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -8,10 +10,20 @@ export const Container = styled.div`
   align-items: center;
   flex-direction: row;
   justify-content: space-around;
+
+  @media screen and (max-width: 768px) {
+    justify-content: space-between;
+    padding: 0 30px;
+    height: 60px;
+  }
 `
 export const ContainerLeft = styled.div`
   display: flex;
   gap: 30px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `
 export const PageLink = styled.a`
   cursor: pointer;
@@ -25,6 +37,10 @@ export const ContainerRight = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `
 export const Line = styled.div`
   height: 40px;
@@ -48,4 +64,29 @@ export const PageLinkExit = styled.a`
   cursor: pointer;
   font-weight: bold;
   color: #d92419;
+`
+export const IconManage = styled(FaUserCog)`
+  font-size: 24px;
+`
+export const MenuMobile = styled(FiMenu)`
+  display: none;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+    font-size: 26px;
+    cursor: pointer;
+  }
+`
+export const BtnLogout = styled.button`
+  display: none;
+  background: transparent;
+  border: none;
+
+  .icon {
+    color: #000;
+    font-size: 26px;
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+  }
 `
