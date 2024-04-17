@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
 import BannerImg from '../../assets/banner.jpg'
-import { Banner, CardProduct } from '../../components'
+import { Banner, CardProduct, MenuMobile } from '../../components'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import {
@@ -58,6 +58,7 @@ export function Products({ location: { state } }) {
 
   return (
     <Container>
+      <MenuMobile />
       <Banner src={BannerImg} alt="Imagem banner" isProduct />
       <CategoryMenu>
         {categories &&
