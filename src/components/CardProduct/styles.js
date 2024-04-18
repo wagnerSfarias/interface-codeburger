@@ -6,13 +6,13 @@ export const Container = styled.div`
   border-radius: 10px;
   display: flex;
   gap: 12px;
-  padding: 16px;
-  margin-bottom: 10px;
+  padding: 12px;
 
   div {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 100%;
   }
 `
 
@@ -25,14 +25,13 @@ export const Image = styled.img`
 export const ProductName = styled.p`
   font-size: 18px;
   line-height: 19px;
-  color: #000;
-  width: 180px;
+  color: #222;
 `
 export const ProductPrice = styled.p`
   font-weight: 500;
   font-size: 15px;
   line-height: 21px;
-  color: #000;
+  color: #555;
   margin-top: 15px;
   margin-bottom: 15px;
 `
