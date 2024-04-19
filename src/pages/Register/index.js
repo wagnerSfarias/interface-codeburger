@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
-import RegisterImg from '../../assets/register-image.png'
+import RegisterImg from '../../assets/register-image.jpg'
 import { Button, ErrorMessage } from '../../components'
 import api from '../../services/api'
 import {

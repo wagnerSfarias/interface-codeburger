@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
-import LoginImg from '../../assets/login-image.png'
+import LoginImg from '../../assets/login-image.jpg'
 import LogoImg from '../../assets/logo.png'
 import { Button, ErrorMessage } from '../../components'
 import paths from '../../constants/paths'
@@ -63,7 +63,7 @@ export function Login() {
 
         setTimeout(() => {
           if (response.data.admin) {
-            history.push(paths.Order)
+            history.push(paths.Orders)
           } else {
             history.push('/')
           }
