@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useCart } from '../../hooks/CartContext'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import { Button } from '../Button'
-import { Container } from './styles'
+import { ContainerResume, Container } from './styles'
 
 export function CartResume() {
   const [finalPrice, setFinalPrice] = useState(0)
   const [deliveryTax] = useState(5)
-
-  const { cartProducts } = useCart()
+  const history = useHistory()
+  const { cartProducts, deleteAllProducts } = useCart()
 
   useEffect(() => {
     const sumAllItems = cartProducts.reduce((acc, current) => {
@@ -32,8 +33,14 @@ export function CartResume() {
       )
       if (status === 201 || status === 200) {
         toast.success('Pedido realizado com sucesso')
-      } else if (status === 400) {
-        toast.error('Falha no sistema tente novamente!')
+        deleteAllProducts()
+        history.push('/meus-pedidos')
+      } else if (status === 401) {
+        toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+        setTimeout(() => {
+          history.push('/login')
+        }, 2000)
       } else {
         throw new Error()
       }
@@ -43,23 +50,26 @@ export function CartResume() {
   }
 
   return (
-    <div>
+    <ContainerResume>
       <Container>
         <div className="container-top">
           <h2 className="title">Resumo do Pedido</h2>
           <p className="items">Items</p>
           <p className="items-price">{formatCurrency(finalPrice)}</p>
           <p className="delivery-tax">Taxa de Entrega</p>
-          <p className="delivary-tax-price">{formatCurrency(deliveryTax)}</p>
+          <p className="delivery-tax-price">{formatCurrency(deliveryTax)}</p>
         </div>
         <div className="container-bottom">
           <p>Total</p>
           <p>{formatCurrency(finalPrice + deliveryTax)}</p>
         </div>
       </Container>
-      <Button style={{ width: '100%', marginTop: 30 }} onClick={submitOrder}>
+      <Button
+        onClick={submitOrder}
+        disabled={cartProducts.length === 0 && true}
+      >
         Finalizar Pedido
       </Button>
-    </div>
+    </ContainerResume>
   )
 }
