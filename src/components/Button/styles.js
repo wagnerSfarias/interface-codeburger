@@ -13,10 +13,27 @@ export const ContainerButton = styled.button`
   font-size: 18px;
   margin: ${props => (props.isCard ? '20px auto 0' : '20px auto')};
 
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
   &:hover {
     opacity: 0.7;
   }
   &:active {
     opacity: 0.6;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: ${props => props.isCard && '100%'};
+    height: 40px;
+    font-weight: 500;
+
+    &:hover {
+      opacity: 1;
+    }
+    &:active {
+      opacity: 1;
+    }
   }
 `
