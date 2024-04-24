@@ -7,6 +7,7 @@ import Person from '../../assets/person.svg'
 import paths from '../../constants/paths'
 import { useMenu } from '../../hooks/MenuContext'
 import { useUser } from '../../hooks/UserContext'
+import { MenuMobile } from '../MenuMobile/index'
 import {
   Container,
   ContainerLeft,
@@ -16,7 +17,7 @@ import {
   ContainerText,
   PageLinkExit,
   IconManage,
-  MenuMobile,
+  IconMenu,
   BtnLogout
 } from './styles'
 
@@ -39,6 +40,7 @@ export function Header() {
   }
   return (
     <Container>
+      <MenuMobile />
       <ContainerLeft>
         <PageLink onClick={() => push(paths.Home)} isActive={pathname === '/'}>
           Início
@@ -48,6 +50,12 @@ export function Header() {
           isActive={pathname.includes('produtos')}
         >
           Ver Produtos
+        </PageLink>
+        <PageLink
+          onClick={() => push(paths.MyOrders)}
+          isActive={pathname.includes('meus-pedidos')}
+        >
+          Meus Pedidos
         </PageLink>
       </ContainerLeft>
       <ContainerRight>
@@ -71,7 +79,7 @@ export function Header() {
         </ContainerText>
       </ContainerRight>
 
-      <MenuMobile onClick={() => changeIsVisible(true)} />
+      <IconMenu onClick={() => changeIsVisible(true)} />
 
       <BtnLogout onClick={logoutUser}>
         <LogoutIcon className="icon" />

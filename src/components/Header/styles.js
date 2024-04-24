@@ -68,7 +68,7 @@ export const PageLinkExit = styled.a`
 export const IconManage = styled(FaUserCog)`
   font-size: 24px;
 `
-export const MenuMobile = styled(FiMenu)`
+export const IconMenu = styled(FiMenu)`
   display: none;
 
   @media screen and (max-width: 768px) {
