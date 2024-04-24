@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 
 import BannerImg from '../../assets/banner.jpg'
 import { Banner } from '../../components'
+import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import formatDate from '../../utils/formartDate'
 import Row from './row'
@@ -21,7 +22,7 @@ export function MyOrders() {
   const [orders, setOrders] = useState([])
   const [rows, setRows] = useState([])
   const history = useHistory()
-
+  const { logout } = useUser()
   useEffect(() => {
     async function loadOrders() {
       try {
@@ -32,6 +33,7 @@ export function MyOrders() {
         if (response.status === 200 || response.status === 201) {
           setOrders(response.data)
         } else if (response.status === 401) {
+          logout()
           toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
 
           setTimeout(() => {
