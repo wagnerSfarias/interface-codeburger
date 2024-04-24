@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import BannerImg from '../../assets/banner.jpg'
-import { Banner, CardProduct, MenuMobile } from '../../components'
+import { Banner, CardProduct } from '../../components'
+import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import {
@@ -14,35 +17,49 @@ import {
 
 export function Products({ location: { state } }) {
   let categoryId = 0
+
   if (state?.categoryId) {
     categoryId = state.categoryId
   }
+  const history = useHistory()
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [activeCategory, setActiveCategory] = useState(categoryId)
+  const { logout } = useUser()
 
   useEffect(() => {
-    async function loadCategories() {
-      const { data } = await api.get('/categories')
+    async function loadData() {
+      try {
+        const [categories, products] = await Promise.all([
+          api.get('categories', { validateStatus: () => true }),
+          api.get('products', { validateStatus: () => true })
+        ])
 
-      const newCategories = [{ id: 0, name: 'Todos' }, ...data]
+        if (categories.status === 200 || categories.status === 201) {
+          const newCategories = [{ id: 0, name: 'Todos' }, ...categories.data]
+          setCategories(newCategories)
 
-      setCategories(newCategories)
+          const newProducts = products.data.map(product => {
+            return { ...product, formatedPrice: formatCurrency(product.price) }
+          })
+
+          setProducts(newProducts)
+        } else if (categories.status === 401) {
+          logout()
+          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+          setTimeout(() => {
+            history.push('/login')
+          }, 2000)
+        } else {
+          throw new Error()
+        }
+      } catch (err) {
+        toast.error('Falha no sistema! Tente novamente.')
+      }
     }
-
-    async function loadProducts() {
-      const { data: allProduct } = await api.get('/products')
-
-      const newProducts = allProduct.map(product => {
-        return { ...product, formatedPrice: formatCurrency(product.price) }
-      })
-
-      setProducts(newProducts)
-    }
-
-    loadCategories()
-    loadProducts()
+    loadData()
   }, [])
 
   useEffect(() => {
@@ -58,7 +75,6 @@ export function Products({ location: { state } }) {
 
   return (
     <Container>
-      <MenuMobile />
       <Banner src={BannerImg} alt="Imagem banner" isProduct />
       <CategoryMenu>
         {categories &&
