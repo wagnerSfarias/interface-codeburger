@@ -1,16 +1,33 @@
 import LogoutIcon from '@mui/icons-material/Logout'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
+import { useMenu } from '../../hooks/MenuContext'
 import { useUser } from '../../hooks/UserContext'
+import { AdminMobile } from '../MenuMobile/admin'
 import listLinks from './menu-list'
-import { Container, ItemsContainer, ListLink } from './styles'
+import {
+  Container,
+  ItemsContainer,
+  ContainerButton,
+  ListLink,
+  MenuMobile
+} from './styles'
 
 export function SideMenuAdmin({ path }) {
   const { logout } = useUser()
+  const { changeIsVisible } = useMenu()
+
+  const location = useLocation()
+
+  useEffect(() => {
+    changeIsVisible(false)
+  }, [location])
 
   return (
     <Container>
+      <AdminMobile />
       <hr></hr>
       {listLinks.map(item => (
         <ItemsContainer key={item.id} isActive={path === item.link}>
@@ -19,12 +36,11 @@ export function SideMenuAdmin({ path }) {
         </ItemsContainer>
       ))}
       <hr></hr>
-      <ItemsContainer style={{ position: 'fixed', bottom: '30px' }}>
+      <MenuMobile onClick={() => changeIsVisible(true)} />
+      <ContainerButton onClick={logout}>
         <LogoutIcon className="icon" />
-        <ListLink to="/login" onClick={logout}>
-          Sair
-        </ListLink>
-      </ItemsContainer>
+        Sair
+      </ContainerButton>
     </Container>
   )
 }

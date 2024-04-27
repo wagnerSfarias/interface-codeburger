@@ -1,15 +1,29 @@
+import { FiMenu } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 export const Container = styled.div`
   background: #3c3c3c;
-  box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.15);
-  width: 300px;
+  width: 30%;
   top: 0;
   left: 0;
 
   hr {
     margin: 50px 15px;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    padding: 0 30px;
+    background: #fff;
+
+    hr {
+      display: none;
+    }
   }
 `
 export const ItemsContainer = styled.div`
@@ -20,8 +34,40 @@ export const ItemsContainer = styled.div`
   border-radius: 2px;
   margin: 8px;
   padding-left: 20px;
+
   .icon {
     color: #fff;
+  }
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`
+export const ContainerButton = styled.button`
+  position: fixed;
+  bottom: 30px;
+  height: 60px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px;
+  padding-left: 20px;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+
+  .icon {
+    font-size: 26px;
+  }
+
+  @media screen and (max-width: 768px) {
+    position: static;
+    color: #000;
+    font-size: 0;
+    gap: 0;
+    height: auto;
+    padding: 0;
+    margin: 0;
   }
 `
 export const ListLink = styled(Link)`
@@ -32,4 +78,13 @@ export const ListLink = styled(Link)`
   line-height: 19px;
   text-decoration: none;
   margin-left: 8px;
+`
+export const MenuMobile = styled(FiMenu)`
+  display: none;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+    font-size: 26px;
+    cursor: pointer;
+  }
 `
