@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Carousel from 'react-elastic-carousel'
 import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import Offers from '../../assets/name-offers.png'
 import { useCart } from '../../hooks/CartContext'
+import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import { Button } from '../Button'
@@ -13,16 +15,38 @@ export function OffersCarousel() {
   const [offers, setOffers] = useState([])
   const { putProductInCart } = useCart()
   const { push } = useHistory()
+  const { logout } = useUser()
 
   useEffect(() => {
     async function loadOffers() {
-      const { data } = await api.get('/products')
-      const onlyOffers = data
-        .filter(offers => offers.offer)
-        .map(product => {
-          return { ...product, formatedPrice: formatCurrency(product.price) }
+      try {
+        const response = await api.get('products', {
+          validateStatus: () => true
         })
-      setOffers(onlyOffers)
+
+        if (response.status === 200 || response.status === 201) {
+          const onlyOffers = response.data
+            .filter(offers => offers.offer)
+            .map(product => {
+              return {
+                ...product,
+                formatedPrice: formatCurrency(product.price)
+              }
+            })
+          setOffers(onlyOffers)
+        } else if (response.status === 401) {
+          logout()
+          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+          setTimeout(() => {
+            push('/login')
+          }, 2000)
+        } else {
+          throw new Error()
+        }
+      } catch (err) {
+        toast.error('Falha no sistema! Tente novamente. ')
+      }
     }
     loadOffers()
   }, [])

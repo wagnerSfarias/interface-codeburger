@@ -1,21 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import Carousel from 'react-elastic-carousel'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import Category from '../../assets/name-category.png'
+import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import { Button } from '../Button'
 import { Container, CategoryImg, ContainerItems, Image } from './styles'
 
 export function CategoryCarousel() {
   const [categories, setCategories] = useState([])
+  const history = useHistory()
+  const { logout } = useUser()
 
   useEffect(() => {
     async function loadCategories() {
-      const { data } = await api.get('categories')
+      try {
+        const response = await api.get('categories', {
+          validateStatus: () => true
+        })
 
-      setCategories(data)
+        if (response.status === 200 || response.status === 201) {
+          setCategories(response.data)
+        } else if (response.status === 401) {
+          logout()
+          toast.error('Ocorreu um erro com sua autenticação! Tente novamente. ')
+
+          setTimeout(() => {
+            history.push('/login')
+          }, 2000)
+        } else {
+          throw new Error()
+        }
+      } catch (err) {
+        toast.error('Falha no sistema! Tente novamente.')
+      }
     }
+
     loadCategories()
   }, [])
 
