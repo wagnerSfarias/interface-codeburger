@@ -38,6 +38,12 @@ export const CategoryImg = styled.img`
 export const ContainerItems = styled.div`
   display: flex;
   flex-direction: column;
+
+  a {
+    display: flex;
+    width: inherit;
+    text-decoration: none;
+  }
 `
 export const Image = styled.img`
   width: 200px;
