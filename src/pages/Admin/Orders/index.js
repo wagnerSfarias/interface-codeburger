@@ -6,25 +6,47 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
+import { useUser } from '../../../hooks/UserContext'
 import api from '../../../services/api'
 import formatDate from '../../../utils/formartDate'
 import status from './order-status'
 import Row from './row'
-import { Container, Menu, LinkMenu } from './styles'
+import { Container, Menu, ButtonMenu } from './styles'
 
 export default function Orders() {
   const [orders, setOrders] = useState([])
   const [filterOrders, setFilterOrders] = useState([])
   const [activeStatus, setActiveStatus] = useState(1)
   const [rows, setRows] = useState([])
+  const { logout } = useUser()
+  const history = useHistory()
 
   useEffect(() => {
     async function loadOrders() {
-      const { data } = await api.get('orders')
+      try {
+        const response = await api.get('orders', {
+          validateStatus: () => true
+        })
 
-      setOrders(data)
-      setFilterOrders(data)
+        if (response.status === 200 || response.status === 201) {
+          setOrders(response.data)
+          setFilterOrders(response.data)
+        } else if (response.status === 401) {
+          logout()
+          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+          setTimeout(() => {
+            history.push('/login')
+          }, 2000)
+        } else {
+          throw new Error()
+        }
+      } catch (err) {
+        toast.error('Falha no sistema! Tente novamente.')
+      }
     }
 
     loadOrders()
@@ -55,7 +77,7 @@ export default function Orders() {
       )
       setFilterOrders(newFilteredOrders)
     }
-  }, [orders])
+  }, [orders, activeStatus])
 
   function handleStatus(status) {
     if (status.id === 1) {
@@ -72,21 +94,22 @@ export default function Orders() {
       <Menu>
         {status &&
           status.map(status => (
-            <LinkMenu
+            <ButtonMenu
               key={status.id}
+              type="button"
               onClick={() => handleStatus(status)}
               isActiveStatus={activeStatus === status.id}
             >
               {status.label}
-            </LinkMenu>
+            </ButtonMenu>
           ))}
       </Menu>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
-              <TableCell />
-              <TableCell>Pedido</TableCell>
+              <TableCell className="button" />
+              <TableCell className="close-table">Pedido</TableCell>
               <TableCell>Cliente</TableCell>
               <TableCell>Data do pedido</TableCell>
               <TableCell>Status</TableCell>
@@ -103,7 +126,7 @@ export default function Orders() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>{' '}
+      </TableContainer>
     </Container>
   )
 }

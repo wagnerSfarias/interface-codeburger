@@ -10,28 +10,54 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
+import { useUser } from '../../../hooks/UserContext'
 import api from '../../../services/api'
+import formatCurrency from '../../../utils/formatCurrency'
 import status from './order-status'
-import { ProductsImg, ReactSelectStyle } from './styles'
+import { ReactSelectStyle } from './styles'
 
 export default function Row({ row, setOrders, orders }) {
-  const [open, setOpen] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [open, setOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [deliveryTax] = useState(5)
+  const history = useHistory()
+  const { logout } = useUser()
+
+  const sumAllPrice = row.products.reduce((acc, current) => {
+    return current.price * current.quantity + acc
+  }, 0)
 
   async function setNewStatus(id, status) {
     setIsLoading(true)
     try {
-      await api.put(`orders/${id}`, { status })
+      const response = await api.put(
+        `orders/${id}`,
+        { status },
+        { validateStatus: () => true }
+      )
 
-      const newOrders = orders.map(order => {
-        return order._id === id ? { ...order, status } : order
-      })
+      if (response.status === 200 || response.status === 201) {
+        const newOrders = orders.map(order => {
+          return order._id === id ? { ...order, status } : order
+        })
 
-      setOrders(newOrders)
+        setOrders(newOrders)
+      } else if (response.status === 401) {
+        logout()
+        toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+        setTimeout(() => {
+          history.push('/login')
+        }, 2000)
+      } else {
+        throw new Error()
+      }
     } catch (err) {
-      console.error(err)
+      toast.error('Falha no sistema! Tente novamente.')
     } finally {
       setIsLoading(false)
     }
@@ -40,7 +66,7 @@ export default function Row({ row, setOrders, orders }) {
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
+        <TableCell className="button">
           <IconButton
             aria-label="expand row"
             size="small"
@@ -49,15 +75,17 @@ export default function Row({ row, setOrders, orders }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" className="close-table">
           {row.orderId}
         </TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.date}</TableCell>
         <TableCell>
           <ReactSelectStyle
+            classNamePrefix="react-select-status"
             options={status.filter(sts => sts.value !== 'Todos')}
             menuPortalTarget={document.body}
+            isSearchable={false}
             placeholder="Status"
             defaultValue={
               status.find(option => option.value === row.status) || null
@@ -76,13 +104,13 @@ export default function Row({ row, setOrders, orders }) {
               <Typography variant="h6" gutterBottom component="div">
                 Pedido
               </Typography>
+              <p className="number-order">Nº {row.orderId}</p>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
                     <TableCell>Quantidade</TableCell>
                     <TableCell>Produto</TableCell>
                     <TableCell>Categoria</TableCell>
-                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -93,14 +121,15 @@ export default function Row({ row, setOrders, orders }) {
                       </TableCell>
                       <TableCell>{productRow.name}</TableCell>
                       <TableCell>{productRow.category}</TableCell>
-                      <TableCell>
-                        <ProductsImg
-                          src={productRow.url}
-                          alt="imagem-do-produto"
-                        />
-                      </TableCell>
                     </TableRow>
                   ))}
+                  <TableRow>
+                    <TableCell className="price">Total</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="price">
+                      {formatCurrency(sumAllPrice + deliveryTax)}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -123,8 +152,8 @@ Row.propTypes = {
       PropTypes.shape({
         quantity: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired
+        category: PropTypes.string.isRequired
+        // url: PropTypes.string.isRequired
       })
     ).isRequired
   }).isRequired
