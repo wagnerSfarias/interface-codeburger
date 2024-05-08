@@ -9,8 +9,10 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import paths from '../../../constants/paths'
+import { useUser } from '../../../hooks/UserContext'
 import api from '../../../services/api'
 import formatCurrency from '../../../utils/formatCurrency'
 import { Container, Img, EditIcon } from './styles'
@@ -18,15 +20,33 @@ import { Container, Img, EditIcon } from './styles'
 export default function ListProducts() {
   const [products, setProducts] = useState()
   const { push } = useHistory()
+  const { logout } = useUser()
 
   useEffect(() => {
-    async function loadOrders() {
-      const { data } = await api.get('products')
+    async function loadProducts() {
+      try {
+        const response = await api.get('products', {
+          validateStatus: () => true
+        })
 
-      setProducts(data)
+        if (response.status === 200 || response.status === 201) {
+          setProducts(response.data)
+        } else if (response.status === 401) {
+          logout()
+          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+          setTimeout(() => {
+            push('/login')
+          }, 2000)
+        } else {
+          throw new Error()
+        }
+      } catch (err) {
+        toast.error('Falha no sistema! Tente novamente.')
+      }
     }
 
-    loadOrders()
+    loadProducts()
   }, [])
 
   function isOffer(offerStatus) {
@@ -48,9 +68,9 @@ export default function ListProducts() {
             <TableRow>
               <TableCell>Nome</TableCell>
               <TableCell>Preço</TableCell>
-              <TableCell align="center">Produto em Oferta</TableCell>
-              <TableCell></TableCell>
-              <TableCell>Editar</TableCell>
+              <TableCell className="offer-icon">Produto em Oferta</TableCell>
+              <TableCell className="close"></TableCell>
+              <TableCell className="edit">Editar</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -64,11 +84,13 @@ export default function ListProducts() {
                     {product.name}
                   </TableCell>
                   <TableCell>{formatCurrency(product.price)}</TableCell>
-                  <TableCell align="center">{isOffer(product.offer)}</TableCell>
-                  <TableCell>
-                    <Img src={product.url} alt="imagem-produto" />
+                  <TableCell className="offer-icon">
+                    {isOffer(product.offer)}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="close">
+                    <Img src={product.url} alt="imagem do produto" />
+                  </TableCell>
+                  <TableCell className="edit">
                     <EditIcon onClick={() => editProduct(product)} />
                   </TableCell>
                 </TableRow>
