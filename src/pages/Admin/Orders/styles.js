@@ -61,9 +61,10 @@ export const Menu = styled.div`
 
   @media screen and (max-width: 768px) {
     flex-direction: column;
-    background-color: #fff;
+    background-color: #e5e5e5;
     padding: 10px 0;
     margin: 2px 0 0;
+    border-top: 2px solid #fff;
   }
 `
 
