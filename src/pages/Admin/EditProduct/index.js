@@ -1,9 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import UploadImage from '@mui/icons-material/CloudUpload'
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
-import ReactSelect from 'react-select'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
@@ -13,10 +12,11 @@ import {
   Container,
   Label,
   Input,
-  ButtonStyles,
+  Button,
   LabelUpload,
+  ReactSelectStyle,
   ContainerInput
-} from './styles'
+} from '../NewProducts/styles'
 
 export default function EditProduct() {
   const [fileName, setFileName] = useState(null)
@@ -32,8 +32,24 @@ export default function EditProduct() {
     name: Yup.string().required('Digite o nome do produto'),
     price: Yup.string().required('Digite o preço do produto'),
     category: Yup.object().required('Escolha uma categoria'),
+    file: Yup.mixed()
+      .notRequired()
+      .test(
+        'type',
+        'Carregue apenas arquivos de extensões png, jpg, jpeg.',
+        value => {
+          if (value.length === 0) {
+            return value
+          } else {
+            return (
+              value[0]?.type === 'image/jpeg' || value[0]?.type === 'image/png'
+            )
+          }
+        }
+      ),
     offer: Yup.bool()
   })
+
   const {
     register,
     handleSubmit,
@@ -41,7 +57,17 @@ export default function EditProduct() {
     formState: { errors }
   } = useForm({ resolver: yupResolver(schema) })
 
-  const onSumit = async data => {
+  useEffect(() => {
+    async function loadCategoreis() {
+      try {
+        const response = await api.get('categories')
+        setCategories(response.data)
+      } catch (err) {}
+    }
+    loadCategoreis()
+  }, [])
+
+  const onSubmit = async data => {
     const productDataFormData = new FormData()
 
     productDataFormData.append('name', data.name)
@@ -53,28 +79,17 @@ export default function EditProduct() {
     try {
       await api.put(`products/${product.id}`, productDataFormData)
       toast.success('Produto editado com sucesso')
-    } catch (err) {
-      toast.error('Falha no sistema tente novamente!')
-    }
 
-    setTimeout(() => {
-      push('/listar-produtos')
-    }, 2000)
+      setTimeout(() => {
+        push('/listar-produtos')
+      }, 2000)
+    } catch (err) {}
   }
-
-  useEffect(() => {
-    async function loadCategoreis() {
-      const { data } = await api.get('categories')
-
-      setCategories(data)
-    }
-
-    loadCategoreis()
-  }, [])
 
   return (
     <Container>
-      <form noValidate onSubmit={handleSubmit(onSumit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        <h2>Editar Produto</h2>
         <div>
           <Label>Nome</Label>
           <Input
@@ -94,30 +109,14 @@ export default function EditProduct() {
           <ErrorMessage>{errors.price?.message}</ErrorMessage>
         </div>
         <div>
-          <LabelUpload>
-            {fileName || (
-              <>
-                <UploadImage />
-                Carregue a imagem do produto
-              </>
-            )}
-            <input
-              {...register('file')}
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={value => setFileName(value.target.files[0]?.name)}
-            />
-          </LabelUpload>
-          <ErrorMessage>{errors.file?.message}</ErrorMessage>
-        </div>
-        <div>
           <Controller
             name="category"
             control={control}
             defaultValue={product.category}
             render={({ field }) => {
               return (
-                <ReactSelect
+                <ReactSelectStyle
+                  classNamePrefix="react-select"
                   {...field}
                   options={categories}
                   getOptionLabel={cat => cat.name}
@@ -130,6 +129,23 @@ export default function EditProduct() {
           ></Controller>
           <ErrorMessage>{errors.category?.message}</ErrorMessage>
         </div>
+        <div>
+          <LabelUpload>
+            {fileName || (
+              <>
+                <UploadImage />
+                Carregue a imagem
+              </>
+            )}
+            <input
+              {...register('file')}
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={value => setFileName(value.target.files[0]?.name)}
+            />
+          </LabelUpload>
+          <ErrorMessage>{errors.file?.message}</ErrorMessage>
+        </div>
         <ContainerInput>
           <input
             type="checkbox"
@@ -138,7 +154,7 @@ export default function EditProduct() {
           />
           <Label>Produto em Oferta ?</Label>
         </ContainerInput>
-        <ButtonStyles>Editar Produto</ButtonStyles>
+        <Button>Editar</Button>
       </form>
     </Container>
   )
