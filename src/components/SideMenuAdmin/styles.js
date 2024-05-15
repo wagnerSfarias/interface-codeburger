@@ -5,21 +5,24 @@ import styled from 'styled-components'
 export const Container = styled.div`
   background: #3c3c3c;
   width: 30%;
+  position: fixed;
   top: 0;
   left: 0;
+  height: 100%;
 
   hr {
     margin: 50px 15px;
   }
 
   @media screen and (max-width: 768px) {
+    position: static;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     height: 60px;
     padding: 0 30px;
-    background: #fff;
+    background: #e5e5e5;
 
     hr {
       display: none;
@@ -38,6 +41,7 @@ export const ItemsContainer = styled.div`
   .icon {
     color: #fff;
   }
+
   @media screen and (max-width: 768px) {
     display: none;
   }
@@ -45,7 +49,7 @@ export const ItemsContainer = styled.div`
 export const ContainerButton = styled.button`
   position: fixed;
   bottom: 30px;
-  height: 60px;
+  height: 40px;
   background: transparent;
   display: flex;
   align-items: center;
@@ -55,6 +59,7 @@ export const ContainerButton = styled.button`
   color: #fff;
   font-size: 16px;
   border: none;
+  cursor: pointer;
 
   .icon {
     font-size: 26px;
