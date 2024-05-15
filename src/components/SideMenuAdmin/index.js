@@ -1,7 +1,7 @@
 import LogoutIcon from '@mui/icons-material/Logout'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 
 import { useMenu } from '../../hooks/MenuContext'
 import { useUser } from '../../hooks/UserContext'
@@ -18,12 +18,18 @@ import {
 export function SideMenuAdmin({ path }) {
   const { logout } = useUser()
   const { changeIsVisible } = useMenu()
+  const { push } = useHistory()
 
   const location = useLocation()
 
   useEffect(() => {
     changeIsVisible(false)
   }, [location])
+
+  const logoutUser = () => {
+    logout()
+    push('/login')
+  }
 
   return (
     <Container>
@@ -37,7 +43,7 @@ export function SideMenuAdmin({ path }) {
       ))}
       <hr></hr>
       <MenuMobile onClick={() => changeIsVisible(true)} />
-      <ContainerButton onClick={logout}>
+      <ContainerButton onClick={logoutUser}>
         <LogoutIcon className="icon" />
         Sair
       </ContainerButton>
