@@ -28,6 +28,7 @@ export default function Routes() {
         <PrivateRoute component={Admin} path={paths.ListProducts} isAdmin />
         <PrivateRoute component={Admin} path={paths.NewProduct} isAdmin />
         <PrivateRoute component={Admin} path={paths.EditProduct} isAdmin />
+        <PrivateRoute component={Admin} path={paths.NewCategory} isAdmin />
       </Switch>
     </Router>
   )

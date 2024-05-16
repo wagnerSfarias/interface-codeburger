@@ -6,6 +6,7 @@ const paths = {
   Orders: '/pedidos',
   ListProducts: '/listar-produtos',
   EditProduct: '/editar-produto',
-  NewProduct: '/novo-produto'
+  NewProduct: '/novo-produto',
+  NewCategory: '/nova-categoria'
 }
 export default paths
