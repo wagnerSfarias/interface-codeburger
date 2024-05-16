@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const apiCodeBurguer = axios.create({
   baseURL: 'http://localhost:3001'
@@ -10,4 +11,24 @@ apiCodeBurguer.interceptors.request.use(async config => {
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+apiCodeBurguer.interceptors.response.use(
+  response => {
+    return response
+  },
+  error => {
+    if (error.response?.status === 401) {
+      toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+
+      localStorage.removeItem('codeburger:user')
+
+      setTimeout(() => {
+        window.location.href = '/login'
+      }, 2000)
+    } else {
+      toast.error('Falha no sistema! Tente novamente.')
+    }
+    return Promise.reject(error)
+  }
+)
 export default apiCodeBurguer
