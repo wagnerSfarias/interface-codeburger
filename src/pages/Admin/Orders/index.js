@@ -6,10 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
-import { useUser } from '../../../hooks/UserContext'
 import api from '../../../services/api'
 import formatDate from '../../../utils/formartDate'
 import status from './order-status'
@@ -21,32 +18,15 @@ export default function Orders() {
   const [filterOrders, setFilterOrders] = useState([])
   const [activeStatus, setActiveStatus] = useState(1)
   const [rows, setRows] = useState([])
-  const { logout } = useUser()
-  const history = useHistory()
 
   useEffect(() => {
     async function loadOrders() {
       try {
-        const response = await api.get('orders', {
-          validateStatus: () => true
-        })
+        const response = await api.get('orders')
 
-        if (response.status === 200 || response.status === 201) {
-          setOrders(response.data)
-          setFilterOrders(response.data)
-        } else if (response.status === 401) {
-          logout()
-          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
-
-          setTimeout(() => {
-            history.push('/login')
-          }, 2000)
-        } else {
-          throw new Error()
-        }
-      } catch (err) {
-        toast.error('Falha no sistema! Tente novamente.')
-      }
+        setOrders(response.data)
+        setFilterOrders(response.data)
+      } catch (err) {}
     }
 
     loadOrders()

@@ -1,11 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import BannerImg from '../../assets/banner.jpg'
 import { Banner, CardProduct } from '../../components'
-import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import {
@@ -21,44 +18,29 @@ export function Products({ location: { state } }) {
   if (state?.categoryId) {
     categoryId = state.categoryId
   }
-  const history = useHistory()
+
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [activeCategory, setActiveCategory] = useState(categoryId)
-  const { logout } = useUser()
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [categories, products] = await Promise.all([
-          api.get('categories', { validateStatus: () => true }),
-          api.get('products', { validateStatus: () => true })
-        ])
+        const categories = await api.get('categories')
+        const products = await api.get('products')
 
-        if (categories.status === 200 || categories.status === 201) {
-          const newCategories = [{ id: 0, name: 'Todos' }, ...categories.data]
-          setCategories(newCategories)
+        const newCategories = [{ id: 0, name: 'Todos' }, ...categories.data]
 
-          const newProducts = products.data.map(product => {
-            return { ...product, formatedPrice: formatCurrency(product.price) }
-          })
+        const newProducts = products.data.map(product => {
+          return { ...product, formatedPrice: formatCurrency(product.price) }
+        })
 
-          setProducts(newProducts)
-        } else if (categories.status === 401) {
-          logout()
-          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
-
-          setTimeout(() => {
-            history.push('/login')
-          }, 2000)
-        } else {
-          throw new Error()
-        }
-      } catch (err) {
-        toast.error('Falha no sistema! Tente novamente.')
-      }
+        setCategories(newCategories)
+        setProducts(newProducts)
+      } catch (err) {}
     }
+
     loadData()
   }, [])
 

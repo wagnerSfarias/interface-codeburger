@@ -26,27 +26,13 @@ export function CartResume() {
       return { id: prodcut.id, quantity: prodcut.quantity }
     })
     try {
-      const { status } = await api.post(
-        'orders',
-        { products: order },
-        { validateStatus: () => true }
-      )
-      if (status === 201 || status === 200) {
-        toast.success('Pedido realizado com sucesso')
-        deleteAllProducts()
-        history.push('/meus-pedidos')
-      } else if (status === 401) {
-        toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
+      await api.post('orders', { products: order })
 
-        setTimeout(() => {
-          history.push('/login')
-        }, 2000)
-      } else {
-        throw new Error()
-      }
-    } catch (err) {
-      toast.error('Falha no sistema tente novamente!')
-    }
+      toast.success('Pedido realizado com sucesso')
+      deleteAllProducts()
+
+      history.push('/meus-pedidos')
+    } catch (err) {}
   }
 
   return (

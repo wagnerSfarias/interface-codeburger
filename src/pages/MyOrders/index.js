@@ -7,12 +7,9 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React, { useEffect, useState } from 'react'
 import { FaWhatsapp } from 'react-icons/fa'
-import { useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import BannerImg from '../../assets/banner.jpg'
 import { Banner } from '../../components'
-import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import formatDate from '../../utils/formartDate'
 import Row from './row'
@@ -21,30 +18,14 @@ import { Container, ContainerWarn } from './styles'
 export function MyOrders() {
   const [orders, setOrders] = useState([])
   const [rows, setRows] = useState([])
-  const history = useHistory()
-  const { logout } = useUser()
+
   useEffect(() => {
     async function loadOrders() {
       try {
-        const response = await api.get(`user/orders`, {
-          validateStatus: () => true
-        })
+        const response = await api.get(`user/orders`)
 
-        if (response.status === 200 || response.status === 201) {
-          setOrders(response.data)
-        } else if (response.status === 401) {
-          logout()
-          toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
-
-          setTimeout(() => {
-            history.push('/login')
-          }, 2000)
-        } else {
-          throw new Error()
-        }
-      } catch (err) {
-        toast.error('Falha no sistema! Tente novamente. ')
-      }
+        setOrders(response.data)
+      } catch (err) {}
     }
 
     loadOrders()
