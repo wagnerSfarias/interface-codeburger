@@ -19,10 +19,10 @@ export default function Routes() {
       <Switch>
         <Route component={Login} path="/login" />
         <Route component={Register} path="/cadastro" />
-        <PrivateRoute exact component={Home} path="/" />
-        <PrivateRoute component={Products} path="/produtos" />
-        <PrivateRoute component={Cart} path="/carrinho" />
-        <PrivateRoute component={MyOrders} path="/meus-pedidos" />
+        <PrivateRoute exact component={Home} path={paths.Home} />
+        <PrivateRoute component={Products} path={paths.Products} />
+        <PrivateRoute component={Cart} path={paths.Cart} />
+        <PrivateRoute component={MyOrders} path={paths.MyOrders} />
 
         <PrivateRoute component={Admin} path={paths.Orders} isAdmin />
         <PrivateRoute component={Admin} path={paths.ListProducts} isAdmin />
