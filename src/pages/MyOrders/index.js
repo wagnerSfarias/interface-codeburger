@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { FaWhatsapp } from 'react-icons/fa'
 
 import BannerImg from '../../assets/banner.jpg'
-import { Banner } from '../../components'
+import { Banner, Footer } from '../../components'
 import api from '../../services/api'
 import formatDate from '../../utils/formartDate'
 import Row from './row'
@@ -70,17 +70,18 @@ export function MyOrders() {
       <ContainerWarn>
         <h2>
           Qualquer dúvida ou problema com seu pedido, entre em contato conosco,
-          através do nosso whatsapp.
+          através do nosso whatsApp.
         </h2>
 
         <a
-          href="http://api.whatsapp.com/send?phone=5511912340524&text=Olá,%20Pode%20me%20ajudar%20com%20meu%20pedido?."
+          href="http://api.whatsapp.com/send?phone=551139938888&text=Olá,%20Pode%20me%20ajudar%20com%20meu%20pedido?."
           target="_blank"
           rel="noreferrer"
         >
           <FaWhatsapp />
         </a>
       </ContainerWarn>
+      <Footer />
     </Container>
   )
 }
