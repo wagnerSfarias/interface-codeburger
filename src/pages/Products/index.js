@@ -27,8 +27,10 @@ export function Products({ location: { state } }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const categories = await api.get('categories')
-        const products = await api.get('products')
+        const [categories, products] = await Promise.all([
+          api.get('categories'),
+          api.get('products')
+        ])
 
         const newCategories = [{ id: 0, name: 'Todos' }, ...categories.data]
 
