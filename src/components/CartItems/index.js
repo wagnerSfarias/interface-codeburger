@@ -1,11 +1,17 @@
 import React from 'react'
 
 import { useCart } from '../../hooks/CartContext'
+import { useUser } from '../../hooks/UserContext'
 import formatCurrency from '../../utils/formatCurrency'
 import { Container, Header, Body, EmpyCart } from './styles'
 
 export function CartItems() {
   const { cartProducts, increaseProducts, decreaseProducts } = useCart()
+  const { userData } = useUser()
+
+  const filteredProducts = cartProducts.filter(
+    data => data.userId === userData.id
+  )
 
   return (
     <Container>
@@ -17,8 +23,8 @@ export function CartItems() {
         <p>Total</p>
       </Header>
 
-      {cartProducts && cartProducts.length > 0 ? (
-        cartProducts.map(product => (
+      {filteredProducts && filteredProducts.length > 0 ? (
+        filteredProducts.map(product => (
           <Body key={product.id}>
             <img src={product.url} />
             <p>{product.name}</p>

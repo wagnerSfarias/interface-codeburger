@@ -11,10 +11,13 @@ export const CartProvider = ({ children }) => {
   }
 
   const putProductInCart = async product => {
+    const clientInfo = await localStorage.getItem('codeburger:user')
+
+    const dataUser = JSON.parse(clientInfo)
     const cartIndex = cartProducts.findIndex(prod => prod.id === product.id)
 
     let newCartProducts = []
-    if (cartIndex >= 0) {
+    if (cartIndex >= 0 && cartProducts[cartIndex].userId === dataUser.id) {
       newCartProducts = cartProducts
 
       newCartProducts[cartIndex].quantity =
@@ -23,6 +26,7 @@ export const CartProvider = ({ children }) => {
       setCartProducts(newCartProducts)
     } else {
       product.quantity = 1
+      product.userId = dataUser.id
       newCartProducts = [...cartProducts, product]
       setCartProducts(newCartProducts)
     }
@@ -67,9 +71,11 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  const deleteAllProducts = async () => {
-    updateLocalStorage([])
-    setCartProducts([])
+  const deleteAllProducts = async id => {
+    const result = cartProducts.filter(data => data.userId !== id)
+
+    updateLocalStorage(result)
+    setCartProducts(result)
   }
 
   useEffect(() => {

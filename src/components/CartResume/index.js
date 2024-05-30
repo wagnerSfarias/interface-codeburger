@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useCart } from '../../hooks/CartContext'
+import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import { Button } from '../Button'
@@ -13,13 +14,17 @@ export function CartResume() {
   const [deliveryTax] = useState(5)
   const history = useHistory()
   const { cartProducts, deleteAllProducts } = useCart()
+  const { userData } = useUser()
 
   useEffect(() => {
-    const sumAllItems = cartProducts.reduce((acc, current) => {
-      return current.price * current.quantity + acc
-    }, 0)
+    const sumAllItems = cartProducts
+      .filter(data => data.userId === userData.id)
+      .reduce((acc, current) => {
+        return current.price * current.quantity + acc
+      }, 0)
+
     setFinalPrice(sumAllItems)
-  }, [cartProducts])
+  }, [cartProducts, userData])
 
   const submitOrder = async () => {
     const order = cartProducts.map(prodcut => {
@@ -29,7 +34,7 @@ export function CartResume() {
       await api.post('orders', { products: order })
 
       toast.success('Pedido realizado com sucesso')
-      deleteAllProducts()
+      deleteAllProducts(userData.id)
 
       history.push('/meus-pedidos')
     } catch (err) {}
