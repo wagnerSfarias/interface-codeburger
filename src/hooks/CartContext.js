@@ -34,17 +34,9 @@ export const CartProvider = ({ children }) => {
     await updateLocalStorage(newCartProducts)
   }
 
-  const deleteProducts = async productId => {
-    const newCart = cartProducts.filter(product => product.id !== productId)
-
-    setCartProducts(newCart)
-
-    await updateLocalStorage(newCart)
-  }
-
-  const increaseProducts = async productId => {
+  const increaseProducts = async (productId, idUser) => {
     const newCart = cartProducts.map(product => {
-      return product.id === productId
+      return product.id === productId && product.userId === idUser
         ? { ...product, quantity: product.quantity + 1 }
         : product
     })
@@ -54,12 +46,14 @@ export const CartProvider = ({ children }) => {
     await updateLocalStorage(newCart)
   }
 
-  const decreaseProducts = async productId => {
-    const cartIndex = cartProducts.findIndex(pd => pd.id === productId)
+  const decreaseProducts = async (productId, idUser) => {
+    const cartIndex = cartProducts.findIndex(
+      product => product.id === productId && idUser === product.userId
+    )
 
     if (cartProducts[cartIndex].quantity > 1) {
       const newCart = cartProducts.map(product => {
-        return product.id === productId
+        return product.id === productId && product.userId === idUser
           ? { ...product, quantity: product.quantity - 1 }
           : product
       })
@@ -67,7 +61,10 @@ export const CartProvider = ({ children }) => {
 
       await updateLocalStorage(newCart)
     } else {
-      deleteProducts(productId)
+      cartProducts.splice(cartIndex, 1)
+      setCartProducts([...cartProducts])
+
+      await updateLocalStorage(cartProducts)
     }
   }
 
