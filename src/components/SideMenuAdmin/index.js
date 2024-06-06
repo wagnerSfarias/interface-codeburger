@@ -9,7 +9,8 @@ import { AdminMobile } from '../MenuMobile/admin'
 import listLinks from './menu-list'
 import {
   Container,
-  ItemsContainer,
+  ContainerMenu,
+  OptionMenu,
   ContainerButton,
   ListLink,
   MenuMobile
@@ -35,12 +36,14 @@ export function SideMenuAdmin({ path }) {
     <Container>
       <AdminMobile />
       <hr></hr>
-      {listLinks.map(item => (
-        <ItemsContainer key={item.id} isActive={path === item.link}>
-          <item.icon className="icon" />
-          <ListLink to={item.link}>{item.label}</ListLink>
-        </ItemsContainer>
-      ))}
+      <ContainerMenu>
+        {listLinks.map(item => (
+          <OptionMenu key={item.id} isActive={path === item.link}>
+            <item.icon className="icon" />
+            <ListLink to={item.link}>{item.label}</ListLink>
+          </OptionMenu>
+        ))}
+      </ContainerMenu>
       <hr></hr>
       <MenuMobile onClick={() => changeIsVisible(true)} />
       <ContainerButton onClick={logoutUser}>

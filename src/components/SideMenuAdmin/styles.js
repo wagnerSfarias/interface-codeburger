@@ -29,21 +29,27 @@ export const Container = styled.div`
     }
   }
 `
-export const ItemsContainer = styled.div`
+export const ContainerMenu = styled.div`
+  padding: 20px 0;
+  border-left: 8px solid rgba(217, 36, 25, 0.88);
+  border-radius: 2px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`
+
+export const OptionMenu = styled.div`
   height: 60px;
   display: flex;
   align-items: center;
   background: ${props => (props.isActive ? 'rgba(217, 36, 25, 0.88)' : 'none')};
   border-radius: 2px;
-  margin: 8px;
+  margin: 8px 8px 8px 0;
   padding-left: 20px;
 
   .icon {
     color: #fff;
-  }
-
-  @media screen and (max-width: 768px) {
-    display: none;
   }
 `
 export const ContainerButton = styled.button`
