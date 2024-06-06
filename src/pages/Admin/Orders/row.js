@@ -11,10 +11,7 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
-import { useUser } from '../../../hooks/UserContext'
 import api from '../../../services/api'
 import formatCurrency from '../../../utils/formatCurrency'
 import status from './order-status'
@@ -24,8 +21,6 @@ export default function Row({ row, setOrders, orders }) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [deliveryTax] = useState(5)
-  const history = useHistory()
-  const { logout } = useUser()
 
   const sumAllPrice = row.products.reduce((acc, current) => {
     return current.price * current.quantity + acc
@@ -34,30 +29,14 @@ export default function Row({ row, setOrders, orders }) {
   async function setNewStatus(id, status) {
     setIsLoading(true)
     try {
-      const response = await api.put(
-        `orders/${id}`,
-        { status },
-        { validateStatus: () => true }
-      )
+      await api.put(`orders/${id}`, { status })
 
-      if (response.status === 200 || response.status === 201) {
-        const newOrders = orders.map(order => {
-          return order._id === id ? { ...order, status } : order
-        })
+      const newOrders = orders.map(order => {
+        return order._id === id ? { ...order, status } : order
+      })
 
-        setOrders(newOrders)
-      } else if (response.status === 401) {
-        logout()
-        toast.error('Ocorreu um erro com sua autenticação! Tente novamente.')
-
-        setTimeout(() => {
-          history.push('/login')
-        }, 2000)
-      } else {
-        throw new Error()
-      }
+      setOrders(newOrders)
     } catch (err) {
-      toast.error('Falha no sistema! Tente novamente.')
     } finally {
       setIsLoading(false)
     }
@@ -85,6 +64,7 @@ export default function Row({ row, setOrders, orders }) {
             classNamePrefix="react-select-status"
             options={status.filter(sts => sts.value !== 'Todos')}
             menuPortalTarget={document.body}
+            menuPosition="fixed"
             isSearchable={false}
             placeholder="Status"
             defaultValue={
@@ -153,7 +133,6 @@ Row.propTypes = {
         quantity: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired
-        // url: PropTypes.string.isRequired
       })
     ).isRequired
   }).isRequired
