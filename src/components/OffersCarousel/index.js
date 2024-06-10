@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Carousel from 'react-elastic-carousel'
-import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import Offers from '../../assets/name-offers.png'
 import { useCart } from '../../hooks/CartContext'
@@ -12,7 +12,6 @@ import { Container, ProductImg, ContainerItems, Image } from './styles'
 export function OffersCarousel() {
   const [offers, setOffers] = useState([])
   const { putProductInCart } = useCart()
-  const { push } = useHistory()
 
   useEffect(() => {
     async function loadOffers() {
@@ -52,14 +51,14 @@ export function OffersCarousel() {
         {offers &&
           offers.map(product => (
             <ContainerItems key={product.id}>
-              <Image src={product.url} alt="foto do produto " />
+              <Image src={product.url} alt={`produto ${product.name}`} />
               <p>{product.name}</p>
               <p>{product.formatedPrice}</p>
               <Button
                 isCard
                 onClick={() => {
                   putProductInCart(product)
-                  push('/carrinho')
+                  toast.success(`${product.name}, foi adicionado ao carrinho !`)
                 }}
               >
                 Peça agora
