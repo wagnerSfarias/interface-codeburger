@@ -14,10 +14,12 @@ export const CartProvider = ({ children }) => {
     const clientInfo = await localStorage.getItem('codeburger:user')
 
     const dataUser = JSON.parse(clientInfo)
-    const cartIndex = cartProducts.findIndex(prod => prod.id === product.id)
+    const cartIndex = cartProducts.findIndex(
+      prod => prod.id === product.id && prod.userId === dataUser.id
+    )
 
     let newCartProducts = []
-    if (cartIndex >= 0 && cartProducts[cartIndex].userId === dataUser.id) {
+    if (cartIndex >= 0) {
       newCartProducts = cartProducts
 
       newCartProducts[cartIndex].quantity =
