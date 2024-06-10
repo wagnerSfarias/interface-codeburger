@@ -86,7 +86,7 @@ export const Body = styled.div`
     }
   }
 `
-export const EmpyCart = styled.p`
+export const EmptyCart = styled.p`
   padding: 10px;
   text-align: center;
   font-weight: bold;

@@ -3,7 +3,7 @@ import React from 'react'
 import { useCart } from '../../hooks/CartContext'
 import { useUser } from '../../hooks/UserContext'
 import formatCurrency from '../../utils/formatCurrency'
-import { Container, Header, Body, EmpyCart } from './styles'
+import { Container, Header, Body, EmptyCart } from './styles'
 
 export function CartItems() {
   const { cartProducts, increaseProducts, decreaseProducts } = useCart()
@@ -42,7 +42,7 @@ export function CartItems() {
           </Body>
         ))
       ) : (
-        <EmpyCart>Carrinho vazio</EmpyCart>
+        <EmptyCart>Carrinho vazio</EmptyCart>
       )}
     </Container>
   )
