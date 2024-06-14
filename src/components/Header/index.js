@@ -3,8 +3,10 @@ import React, { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
 import Cart from '../../assets/cart.svg'
+import EmptyCart from '../../assets/empty-cart.svg'
 import Person from '../../assets/person.svg'
 import paths from '../../constants/paths'
+import { useCart } from '../../hooks/CartContext'
 import { useMenu } from '../../hooks/MenuContext'
 import { useUser } from '../../hooks/UserContext'
 import { MenuMobile } from '../MenuMobile/index'
@@ -23,6 +25,7 @@ import {
 
 export function Header() {
   const { logout, userData } = useUser()
+  const { cartProducts } = useCart()
   const { changeIsVisible } = useMenu()
   const {
     push,
@@ -38,6 +41,9 @@ export function Header() {
     logout()
     push('/login')
   }
+
+  const existProduct = cartProducts.filter(data => data.userId === userData.id)
+
   return (
     <Container>
       <MenuMobile />
@@ -60,7 +66,10 @@ export function Header() {
       </ContainerLeft>
       <ContainerRight>
         <PageLink onClick={() => push(paths.Cart)}>
-          <img src={Cart} alt="carrinho" />
+          <img
+            src={existProduct.length > 0 ? Cart : EmptyCart}
+            alt="carrinho"
+          />
         </PageLink>
         <Line></Line>
         {userData?.admin ? (
