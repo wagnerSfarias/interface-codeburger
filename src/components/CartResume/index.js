@@ -27,9 +27,11 @@ export function CartResume() {
   }, [cartProducts, userData])
 
   const submitOrder = async () => {
-    const order = cartProducts.map(prodcut => {
-      return { id: prodcut.id, quantity: prodcut.quantity }
-    })
+    const order = cartProducts
+      .filter(data => data.userId === userData.id)
+      .map(prodcut => {
+        return { id: prodcut.id, quantity: prodcut.quantity }
+      })
     try {
       await api.post('orders', { products: order })
 
@@ -55,10 +57,7 @@ export function CartResume() {
           <p>{formatCurrency(finalPrice + deliveryTax)}</p>
         </div>
       </Container>
-      <Button
-        onClick={submitOrder}
-        disabled={cartProducts.length === 0 && true}
-      >
+      <Button onClick={submitOrder} disabled={finalPrice === 0 && true}>
         Finalizar Pedido
       </Button>
     </ContainerResume>
