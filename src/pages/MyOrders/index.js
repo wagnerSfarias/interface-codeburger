@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { FaWhatsapp } from 'react-icons/fa'
 
 import BannerImg from '../../assets/banner.jpg'
-import { Banner, Footer } from '../../components'
+import { Banner, Footer, LoadingMessage } from '../../components'
 import api from '../../services/api'
 import formatDate from '../../utils/formartDate'
 import Row from './row'
@@ -18,14 +18,21 @@ import { Container, ContainerWarn } from './styles'
 export function MyOrders() {
   const [orders, setOrders] = useState([])
   const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadOrders() {
       try {
         const response = await api.get(`user/orders`)
 
-        setOrders(response.data)
-      } catch (err) {}
+        setTimeout(() => {
+          setOrders(response.data)
+
+          setLoading(false)
+        }, 1500)
+      } catch (err) {
+        setLoading(false)
+      }
     }
 
     loadOrders()
@@ -66,6 +73,13 @@ export function MyOrders() {
           </TableBody>
         </Table>
       </TableContainer>
+      {loading && <LoadingMessage loading />}
+
+      {!loading && rows.length === 0 && (
+        <LoadingMessage>
+          Você ainda não possui histórico de pedidos.
+        </LoadingMessage>
+      )}
 
       <ContainerWarn>
         <h2>

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 
 import BannerImg from '../../assets/banner.jpg'
-import { Banner, CardProduct, Footer } from '../../components'
+import { Banner, CardProduct, Footer, LoadingMessage } from '../../components'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import {
@@ -23,6 +23,7 @@ export function Products({ location: { state } }) {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [activeCategory, setActiveCategory] = useState(categoryId)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadData() {
@@ -33,14 +34,18 @@ export function Products({ location: { state } }) {
         ])
 
         const newCategories = [{ id: 0, name: 'Todos' }, ...categories.data]
-
-        const newProducts = products.data.map(product => {
-          return { ...product, formatedPrice: formatCurrency(product.price) }
-        })
-
         setCategories(newCategories)
-        setProducts(newProducts)
-      } catch (err) {}
+        setTimeout(() => {
+          const newProducts = products.data.map(product => {
+            return { ...product, formatedPrice: formatCurrency(product.price) }
+          })
+
+          setProducts(newProducts)
+          setLoading(false)
+        }, 1000)
+      } catch (err) {
+        setLoading(false)
+      }
     }
 
     loadData()
@@ -73,12 +78,18 @@ export function Products({ location: { state } }) {
             </CategoryButton>
           ))}
       </CategoryMenu>
-      <ProductsContainer>
+      <ProductsContainer isProduct={filteredProducts.length}>
         {filteredProducts &&
           filteredProducts.map(product => (
             <CardProduct key={product.id} product={product} />
           ))}
       </ProductsContainer>
+      {loading && <LoadingMessage loading />}
+
+      {!loading && filteredProducts.length === 0 && (
+        <LoadingMessage>Nenhum produto foi encontrado.</LoadingMessage>
+      )}
+
       <Footer />
     </Container>
   )

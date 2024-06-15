@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React, { useEffect, useState } from 'react'
 
+import { LoadingMessage } from '../../../components'
 import api from '../../../services/api'
 import formatDate from '../../../utils/formartDate'
 import status from './order-status'
@@ -18,15 +19,21 @@ export default function Orders() {
   const [filterOrders, setFilterOrders] = useState([])
   const [activeStatus, setActiveStatus] = useState(1)
   const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadOrders() {
       try {
         const response = await api.get('orders')
 
-        setOrders(response.data)
-        setFilterOrders(response.data)
-      } catch (err) {}
+        setTimeout(() => {
+          setOrders(response.data)
+          setFilterOrders(response.data)
+          setLoading(false)
+        }, 2000)
+      } catch (err) {
+        setLoading(false)
+      }
     }
 
     loadOrders()
@@ -107,6 +114,13 @@ export default function Orders() {
           </TableBody>
         </Table>
       </TableContainer>
+      {loading && <LoadingMessage loading />}
+
+      {!loading && rows.length === 0 && (
+        <LoadingMessage>
+          Nenhum histórico de pedidos foi encontrado.
+        </LoadingMessage>
+      )}
     </Container>
   )
 }

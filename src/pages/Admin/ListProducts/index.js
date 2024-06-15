@@ -10,13 +10,15 @@ import TableRow from '@mui/material/TableRow'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
+import { LoadingMessage } from '../../../components'
 import paths from '../../../constants/paths'
 import api from '../../../services/api'
 import formatCurrency from '../../../utils/formatCurrency'
 import { Container, Img, EditIcon } from './styles'
 
 export default function ListProducts() {
-  const [products, setProducts] = useState()
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
   const { push } = useHistory()
 
   useEffect(() => {
@@ -24,8 +26,13 @@ export default function ListProducts() {
       try {
         const response = await api.get('products')
 
-        setProducts(response.data)
-      } catch (err) {}
+        setTimeout(() => {
+          setProducts(response.data)
+          setLoading(false)
+        }, 2500)
+      } catch (err) {
+        setLoading(false)
+      }
     }
 
     loadProducts()
@@ -80,6 +87,13 @@ export default function ListProducts() {
           </TableBody>
         </Table>
       </TableContainer>
+      {loading && <LoadingMessage loading />}
+
+      {!loading && products.length === 0 && (
+        <LoadingMessage>
+          Nenhum histórico de produtos foi encontrado.
+        </LoadingMessage>
+      )}
     </Container>
   )
 }

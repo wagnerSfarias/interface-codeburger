@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
-import { ErrorMessage } from '../../../components'
+import { ErrorMessage, LoadingMessage } from '../../../components'
 import paths from '../../../constants/paths'
 import { useUser } from '../../../hooks/UserContext'
 import api from '../../../services/api'
@@ -30,6 +30,7 @@ export default function NewCategory() {
   const [fileName, setFileName] = useState(null)
   const [categories, setCategories] = useState([])
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
   const { push } = useHistory()
   const { logout } = useUser()
 
@@ -61,8 +62,14 @@ export default function NewCategory() {
     async function loadCategoreis() {
       try {
         const response = await api.get('categories')
-        setCategories(response.data)
-      } catch (err) {}
+
+        setTimeout(() => {
+          setCategories(response.data)
+          setLoading(false)
+        }, 1000)
+      } catch (err) {
+        setLoading(false)
+      }
     }
     loadCategoreis()
   }, [])
@@ -79,7 +86,7 @@ export default function NewCategory() {
       })
 
       if (response.status === 200 || response.status === 201) {
-        toast.success('Categoria cadastrado com sucesso')
+        toast.success('Categoria cadastrada com sucesso')
         setCategories([...categories, response.data])
 
         reset({ name: '', file: {} })
@@ -168,6 +175,13 @@ export default function NewCategory() {
           </TableBody>
         </Table>
       </TableContainer>
+      {loading && <LoadingMessage loading />}
+
+      {!loading && categories.length === 0 && (
+        <LoadingMessage>
+          Nenhum histórico de categoria foi encontrado.
+        </LoadingMessage>
+      )}
     </Container>
   )
 }
