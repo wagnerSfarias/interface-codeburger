@@ -2,9 +2,11 @@ import Edit from '@mui/icons-material/Edit'
 import styled from 'styled-components'
 
 export const Container = styled.div`
+  padding-bottom: 10%;
+
   .MuiTableContainer-root {
     width: 96%;
-    margin: 2% auto 10%;
+    margin: 2% auto;
   }
 
   .offer-icon {

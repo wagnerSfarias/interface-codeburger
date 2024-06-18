@@ -7,12 +7,12 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 5%;
   gap: 20px;
+  padding: 5% 0 10%;
 
   .MuiTableContainer-root {
     width: 80%;
-    margin: 2% auto 10%;
+    margin: 2% auto;
   }
 
   .MuiTable-root {
