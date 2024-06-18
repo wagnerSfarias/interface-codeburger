@@ -15,6 +15,9 @@ export const Container = styled.div`
   }
 
   @media screen and (max-width: 768px) {
+    min-height: calc(100vh - 60px);
+    justify-content: space-between;
+
     .MuiTable-root {
       table-layout: fixed;
     }

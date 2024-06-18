@@ -5,6 +5,11 @@ export const Container = styled.div`
   min-height: calc(100vh - 72px);
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 768px) {
+    min-height: calc(100vh - 60px);
+    justify-content: space-between;
+  }
 `
 export const CategoryMenu = styled.div`
   display: flex;
@@ -42,7 +47,7 @@ export const CategoryButton = styled.button`
   }
 `
 export const ProductsContainer = styled.div`
-  display: grid;
+  display: ${props => (props.isProduct ? 'grid' : 'none')};
   grid-template-columns: repeat(auto-fill, 370px);
   gap: 12px;
   padding: 30px;

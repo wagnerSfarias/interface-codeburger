@@ -3,6 +3,10 @@ import styled from 'styled-components'
 export const Container = styled.div`
   background: #e5e5e5;
   min-height: calc(100vh - 72px);
+
+  @media screen and (max-width: 768px) {
+    min-height: calc(100vh - 60px);
+  }
 `
 
 export const Wrapper = styled.div`
