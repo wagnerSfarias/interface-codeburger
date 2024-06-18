@@ -1,6 +1,7 @@
 import React from 'react'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 
+import { ScrollToTop } from '../components'
 import paths from '../constants/paths'
 import {
   Home,
@@ -16,6 +17,7 @@ import PrivateRoute from './private-route'
 export default function Routes() {
   return (
     <Router>
+      <ScrollToTop />
       <Switch>
         <Route component={Login} path="/login" />
         <Route component={Register} path="/cadastro" />
