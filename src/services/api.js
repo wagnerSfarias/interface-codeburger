@@ -1,18 +1,18 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const apiCodeBurguer = axios.create({
+const apiCodeBurger = axios.create({
   baseURL: 'http://localhost:3001'
 })
 
-apiCodeBurguer.interceptors.request.use(async config => {
+apiCodeBurger.interceptors.request.use(async config => {
   const userData = await localStorage.getItem('codeburger:user')
   const token = userData && JSON.parse(userData).token
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
-apiCodeBurguer.interceptors.response.use(
+apiCodeBurger.interceptors.response.use(
   response => {
     return response
   },
@@ -31,4 +31,4 @@ apiCodeBurguer.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export default apiCodeBurguer
+export default apiCodeBurger
